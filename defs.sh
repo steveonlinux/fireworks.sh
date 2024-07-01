@@ -1,12 +1,5 @@
 #!/bin/bash
 #TODO: get other trajectories working
-# Hide the cursor
-tput civis
-# Ensure cursor is visible again on exit
-trap "tput cnorm; clear" EXIT
-
-# Clear the screen at the start
-clear
 
 draw_frame() {
     local col=$1
@@ -19,13 +12,6 @@ draw_frame() {
 
     # Print the character with color
     echo -ne "${color}${char}${RESET}"
-}
-
-draw_explosion() {
-  local col=$1
-  local row=$2
-  local char=$3
-  local color=$4
 }
 
 gen_color() {
@@ -80,7 +66,6 @@ explode() {
         1)
           explode_bloom_big $1 $2
         ;;
-            # Explosion type 1
         2)
           explode_bloom_small $1 $2
         ;;
@@ -119,7 +104,7 @@ explode_cross() {
             local dy=${pos#* }
             draw_frame $((x + dx)) $((y + dy)) "$symbol" "$color"
         done
-        sleep 0.1
+        sleep $time 
     done
 }
 explode_cross_big() {
@@ -141,7 +126,7 @@ explode_cross_big() {
             local dy=${pos#* }
             draw_frame $((x + dx)) $((y + dy)) "$symbol" "$color"
         done
-        sleep 0.1
+        sleep $time
     done
 }
 explode_starburst() {
@@ -166,7 +151,7 @@ explode_starburst() {
             local dy=${pos#* }
             draw_frame $((x + dx)) $((y + dy)) "$symbol" "$color"
         done
-        sleep 0.1
+        sleep $time
     done
 }
 
@@ -198,7 +183,7 @@ explode_bloom_big() {
             local dy=${pos#* }
             draw_frame $((x + dx)) $((y + dy)) "$symbol" "$color"
         done
-        sleep 0.1 # Short delay between frames
+        sleep $time # Short delay between frames
     done
 }
 
@@ -226,7 +211,7 @@ explode_bloom_small() {
             local dy=${pos#* }
             draw_frame $((x + dx)) $((y + dy)) "$symbol" "$color"
         done
-        sleep 0.1 # Short delay between frames
+        sleep $time # Short delay between frames
     done
 }
 
@@ -255,7 +240,7 @@ explode_bloom_biggest() {
             local dy=${pos#* }
             draw_frame $((x + dx)) $((y + dy)) "$symbol" "$color"
         done
-        sleep 0.1
+        sleep $time
     done
 }
 
@@ -271,23 +256,3 @@ launch_multiple() {
     # Wait for all background fireworks to finish
     wait
 }
-
-main() {
-  rows=$(tput lines)
-  cols=$(tput cols)
-  y_max=$(($rows / 4))
-  x_max=$(($cols - ($cols / 4)))
-
-  while [ 1 -eq 1 ]; do
-    launch_linear 2> /dev/null &
-    wait
-    clear
-  done
-#  while :; do
-#    launch_multiple 5 # Number of simultaneous fireworks
-#    sleep 1 # Wait before clearing the screen and launching again
-#    clear
-#  done
-}
-
-main
