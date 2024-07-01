@@ -1,5 +1,5 @@
 #!/bin/bash
-#TODO: Fix larger explosions, maybe remove; get other trajectories working
+#TODO: get other trajectories working
 # Hide the cursor
 tput civis
 # Ensure cursor is visible again on exit
@@ -38,7 +38,7 @@ launch_linear() {
     local x=$((RANDOM % (cols - 2) + 1)) # Random x coordinate for the launch
     local y=$((rows - 1)) # Start at the bottom of the screen
     local color="\033[37m" # White color for the firework trail
-    y_max=$(( y_max - (RANDOM % y_max) ))
+   # y_max=$(( y_max - (RANDOM % y_max) ))
     # Move the firework up the screen
     while [ $y -gt "$y_max" ]; do
         draw_frame $x $y "|" "$color" # Draw the firework trail
@@ -74,7 +74,7 @@ launch_parabolic() {
 
 
 explode() {
-  local rand_num=$(( (RANDOM % 8) + 1 ))
+  local rand_num=$(( (RANDOM % 6) + 1 ))
 
     case $rand_num in
         1)
@@ -95,12 +95,6 @@ explode() {
         ;;
         6)
           explode_cross_big $1 $2
-        ;;
-        7)
-          explode_bloom_biggie  $1 $2
-        ;;
-        8)
-          explode_starburst_big $1 $2
         ;;
 
     esac
@@ -176,30 +170,6 @@ explode_starburst() {
     done
 }
 
-explode_starburst_big() {
-    local x=$1
-    local y=$2
-    local color=$3
-
-    local positions=(
-        "0 -9" "0 9" "-9 0" "9 0"
-        "-3 -9" "3 -9" "-3 9" "3 9"
-        "-9 -3" "9 -3" "-9 3" "9 3"
-        "-6 -6" "-6 6" "6 -6" "6 6"
-        "-9 -9" "-9 9" "9 -9" "9 9"
-    )
-
-    local symbols=('*' 'o' '+' 'x')
-
-    for symbol in "${symbols[@]}"; do
-        for pos in "${positions[@]}"; do
-            local dx=${pos% *}
-            local dy=${pos#* }
-            draw_frame $((x + dx)) $((y + dy)) "$symbol" "$color"
-        done
-        sleep 0.1
-    done
-}
 # Function to animate a circular fireworks explosion
 explode_bloom_big() {
     local x=$1
@@ -281,35 +251,6 @@ explode_bloom_biggest() {
 
     for symbol in "${symbols[@]}"; do
         for pos in "${positions[@]}"; do
-            local dx=${pos% *}
-            local dy=${pos#* }
-            draw_frame $((x + dx)) $((y + dy)) "$symbol" "$color"
-        done
-        sleep 0.1
-    done
-}
-
-explode_bloom_biggie() {
-    local x=$1
-    local y=$2
-    local color
-    color=$(gen_color)
-
-    local positions=(
-        "0 -12" "0 12" "-12 0" "12 0"
-        "-6 -9" "6 -9" "-6 9" "6 9"
-        "-9 -6" "9 -6" "-9 6" "9 6"
-        "-3 -12" "3 -12" "-3 12" "3 12"
-        "-12 -3" "12 -3" "-12 3" "12 3"
-        "-9 -9" "-9 9" "9 -9" "9 9"
-        "-6 -12" "6 -12" "-6 12" "6 12"
-        "-12 -6" "12 -6" "-12 6" "12 6"
-    )
-
-    local symbols=('*' 'o' '+' 'x')
-
-    for symbol in "${symbols[@]}"; do
-        for pos in "${positions[@]}"}; do
             local dx=${pos% *}
             local dy=${pos#* }
             draw_frame $((x + dx)) $((y + dy)) "$symbol" "$color"
