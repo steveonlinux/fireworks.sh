@@ -18,7 +18,8 @@ main() {
   x_max=$(($cols - ($cols / 4)))
 
   while [ 1 -eq 1 ]; do
-    launch_linear 2> /dev/null &
+    launch 2> /dev/null &
+#    launch_linear 2> /dev/null &
     wait
     clear
   done

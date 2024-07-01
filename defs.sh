@@ -38,6 +38,37 @@ launch_linear() {
     explode $x $y
 }
 
+launch_squiggle() {
+    local x=$((RANDOM % (cols - 2) + 1)) # Random x coordinate for the launch
+    local y=$((rows - 1)) # Start at the bottom of the screen
+    local color="\033[37m" # White color for the firework trail
+    local flag
+    if (( RANDOM % 2 )); then
+      flag=true
+    else
+      flag=false
+    fi
+   # y_max=$(( y_max - (RANDOM % y_max) ))
+    # Move the firework up the screen
+    while [ $y -gt "$y_max" ]; do
+        flag=$([ "$flag" = true ] && echo false || echo true)
+        draw_frame $x $y "*" "$color" # Draw the firework trail
+        sleep 0.05 # Short delay for the animation
+        draw_frame $x $y " " "$color" # Clear the previous trail character
+        if [ $flag == false ]; then
+          x=$((x-1))
+        else
+          x=$((x+1))
+        fi
+        y=$((y-1)) # Move up one row
+    done
+
+    # Once the firework reaches the top, make it explode
+#    explode $x $y
+    explode $x $y
+}
+
+
 launch_parabolic() {
     local x_start=$((RANDOM % (cols - 2) + 1)) # Random x starting point
     local x_end=$((RANDOM % (cols - 2) + 1))   # Random x ending point
@@ -256,3 +287,17 @@ launch_multiple() {
     # Wait for all background fireworks to finish
     wait
 }
+
+launch() {
+  local rand_num=$(( (RANDOM % 2) + 1 ))
+
+    case $rand_num in
+        1)
+          launch_linear
+        ;;
+        2)
+          launch_squiggle
+        ;;
+    esac
+}
+
